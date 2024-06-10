@@ -23,10 +23,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -50,20 +47,30 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDxEMl52AMPzsdktHAfNrMGoCzocRb2UPU',
-    appId: '1:161182624335:web:7bf8d00ee4699bb06bd83a',
-    messagingSenderId: '161182624335',
-    projectId: 'twitterclone-tc123',
-    authDomain: 'twitterclone-tc123.firebaseapp.com',
-    storageBucket: 'twitterclone-tc123.appspot.com',
-    measurementId: 'G-V06BRXM28H',
+    apiKey: 'AIzaSyCZ215U6vypnuJSPCxm0b9q98rHQ7bC1H4',
+    appId: '1:971518518201:web:a256f8ca82e7f809dccc68',
+    messagingSenderId: '971518518201',
+    projectId: 'mastedonclone',
+    authDomain: 'mastedonclone.firebaseapp.com',
+    storageBucket: 'mastedonclone.appspot.com',
+    measurementId: 'G-NTHXGR0QEZ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBNAJBiVa-BGFcQ0KPLNQ-QSXkOj_Mc1HM',
-    appId: '1:161182624335:android:8231a8c80d098f946bd83a',
-    messagingSenderId: '161182624335',
-    projectId: 'twitterclone-tc123',
-    storageBucket: 'twitterclone-tc123.appspot.com',
+    apiKey: 'AIzaSyCHgPJZrxeivrkmUOEUODYwG__ioHWNs1w',
+    appId: '1:971518518201:android:fc31082353d18a01dccc68',
+    messagingSenderId: '971518518201',
+    projectId: 'mastedonclone',
+    storageBucket: 'mastedonclone.appspot.com',
   );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAtFODwrbyHeUkcSR3ac7B7fWRIwWGlTYg',
+    appId: '1:971518518201:ios:6ca9ed1af02727d4dccc68',
+    messagingSenderId: '971518518201',
+    projectId: 'mastedonclone',
+    storageBucket: 'mastedonclone.appspot.com',
+    iosBundleId: 'com.example.mastedon',
+  );
+
 }

@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "161182624335",
-    "project_id": "twitterclone-tc123",
-    "storage_bucket": "twitterclone-tc123.appspot.com"
+    "project_number": "971518518201",
+    "project_id": "mastedonclone",
+    "storage_bucket": "mastedonclone.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:161182624335:android:8231a8c80d098f946bd83a",
+        "mobilesdk_app_id": "1:971518518201:android:fc31082353d18a01dccc68",
         "android_client_info": {
-          "package_name": "com.clone.twitter"
+          "package_name": "com.example.mastedon"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBNAJBiVa-BGFcQ0KPLNQ-QSXkOj_Mc1HM"
+          "current_key": "AIzaSyCHgPJZrxeivrkmUOEUODYwG__ioHWNs1w"
         }
       ],
       "services": {
