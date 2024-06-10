@@ -222,6 +222,7 @@ class Register extends StatelessWidget {
           MyFirestoreConstants.email: userEmail,
           MyFirestoreConstants.userHandle: userHandle,
           MyFirestoreConstants.name: name,
+          MyFirestoreConstants.userImage: MyStrings.defaultPic,
           MyFirestoreConstants.createdAt: DateTime.now().microsecondsSinceEpoch,
         });
 
