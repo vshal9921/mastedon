@@ -41,20 +41,12 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
-  late String email;
-  late String password;
-  late String name;
+  late String? email;
+  late String? password;
+  late String? name;
   final _auth = FirebaseAuth.instance;
   final _fireStore = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
-
-  void _submit() {
-    final isValid = _formKey.currentState?.validate();
-    if (!isValid!) {
-      return;
-    }
-    _formKey.currentState?.save();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +65,11 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
                   fontWeight: FontWeight.normal,
                 ),
                 decoration: MyStyle.registerForm(hintText: MyStrings.name),
-                onFieldSubmitted: (value) {},
+                onFieldSubmitted: (value) {
+                },
+                onSaved: (value) {
+                  name = value;
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return MyStrings.enterName;
@@ -92,7 +88,11 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
                 ),
                 decoration:
                     MyStyle.registerForm(hintText: MyStrings.enterEmail),
-                onFieldSubmitted: (value) {},
+                onFieldSubmitted: (value) {
+                },
+                onSaved: (value) {
+                  email = value;
+                },
                 validator: (value) {
                   return isEmailValid(value!) ? null : MyStrings.enterEmail;
                 },
@@ -109,7 +109,11 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
                   ),
                   decoration:
                       MyStyle.registerForm(hintText: MyStrings.enterPassword),
-                  onFieldSubmitted: (value) {},
+                  onFieldSubmitted: (value) {
+                  },
+                  onSaved: (value) {
+                    password = value;
+                  },
                   validator: (value) {
                     return isPasswordValid(value!)
                         ? null
@@ -162,11 +166,16 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
     //check validations
     // Goto Home
 
+    final isValid = _formKey.currentState?.validate();
+    if (!isValid!) {
+      return;
+    }
+    _formKey.currentState?.save();
+
     UiUtil.closeKeyBoard();
 
     try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email!, password: password!);
 
       String? userEmail = userCredential.user?.email;
       String userHandle = '';
@@ -178,7 +187,7 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
 
         await SharedPref.setString(SharedPref.email, userEmail);
         await SharedPref.setString(SharedPref.userHandle, userHandle);
-        await SharedPref.setString(SharedPref.name, name);
+        await SharedPref.setString(SharedPref.name, name!);
 
         await _fireStore.collection(MyFirestoreConstants.userTable).add({
           MyFirestoreConstants.email: userEmail,
