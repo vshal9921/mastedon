@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/constants/color.dart';
+import 'string.dart';
 
 class MyStyle {
   MyStyle._();
@@ -36,9 +37,33 @@ class MyStyle {
   );
 
   static TextStyle profileText = const TextStyle(
-    fontFamily: 'Segoe',
-    color: MyColors.secondary,
-    fontSize: 16.0,
-    fontWeight: FontWeight.w900
+      fontFamily: 'Segoe',
+      color: MyColors.secondary,
+      fontSize: 16.0,
+      fontWeight: FontWeight.w900);
+
+  static InputDecoration registerForm = const InputDecoration(
+    hintText: MyStrings.enterName,
+    fillColor: MyColors.inputField,
+    filled: true,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(30.0),
+      ),
+      borderSide: BorderSide(color: MyColors.inputField),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(30.0),
+      ),
+      borderSide: BorderSide(color: MyColors.inputField),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(30.0),
+      ),
+      borderSide: BorderSide(color: MyColors.inputField),
+    ),
+    contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
   );
 }

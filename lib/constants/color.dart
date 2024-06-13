@@ -15,6 +15,7 @@ class MyColors{
   static const Color extraExtraLightGrey = Color(0xfF5F8FA);
   static const Color white = Color(0xFFffffff);
   static const Color background = Color(0xFFEEEEEE);
+  static const Color inputField = Color(0xFFEFEFEF);
 
   // twitter color
   static const Color iconColor = Color(0XFF687684);

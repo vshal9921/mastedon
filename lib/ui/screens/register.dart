@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mastedon/utils/validation_mixin.dart';
 import '/constants/color.dart';
 import '/constants/routes.dart';
 import '/constants/string.dart';
@@ -30,7 +31,10 @@ class Register extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(child: _body(context)),
+      body: SingleChildScrollView(
+        // child: _body(context),
+        child: RegisterForm(),
+      ),
     );
   }
 
@@ -70,18 +74,6 @@ class Register extends StatelessWidget {
               },
             ),
           ),
-
-
-          // InputField(
-          //   'Name',
-          //   //controller: _nameController
-          // ),
-
-          // InputField('Enter email',
-          //     //controller: _emailController,
-          //     isEmail: true),
-          // email box
-
           Container(
             margin: const EdgeInsets.symmetric(vertical: 15),
             decoration: BoxDecoration(
@@ -111,11 +103,6 @@ class Register extends StatelessWidget {
               },
             ),
           ),
-
-          // InputField('Enter password',
-          //     //controller: _passwordController,
-          //     isPassword: true),
-
           Container(
             margin: const EdgeInsets.symmetric(vertical: 15),
             decoration: BoxDecoration(
@@ -146,13 +133,7 @@ class Register extends StatelessWidget {
               },
             ),
           ),
-
-          // InputField('Confirm password',
-          //     //controller: _confirmController,
-          //     isPassword: true),
-
           SubmitButton(title: MyStrings.signUp, onPressed: registerUser),
-
           Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
@@ -182,14 +163,6 @@ class Register extends StatelessWidget {
               )
             ],
           ),
-
-          // const Divider(height: 30),
-          // const SizedBox(height: 30),
-          // GoogleLoginButton(
-          //   loginCallback: widget.loginCallback,
-          //   loader: loader,
-          // ),
-          // const SizedBox(height: 30),
         ],
       ),
     );
@@ -203,16 +176,16 @@ class Register extends StatelessWidget {
     UiUtil.closeKeyBoard();
 
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
-      String? userEmail =  userCredential.user?.email;
+      String? userEmail = userCredential.user?.email;
       String userHandle = '';
 
       if (userEmail != null) {
-
-       UiUtil.debugPrint(userEmail);
-       userHandle = userEmail.substring(0, userEmail.indexOf('@'));
-       UiUtil.debugPrint('userhandle = $userHandle');
+        UiUtil.debugPrint(userEmail);
+        userHandle = userEmail.substring(0, userEmail.indexOf('@'));
+        UiUtil.debugPrint('userhandle = $userHandle');
 
         await SharedPref.setString(SharedPref.email, userEmail);
         await SharedPref.setString(SharedPref.userHandle, userHandle);
@@ -234,5 +207,69 @@ class Register extends StatelessWidget {
       UiUtil.debugPrint(e);
       Get.snackbar(MyStrings.firebaseError, MyStrings.errorLogin);
     }
+  }
+}
+
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
+
+  @override
+  State<RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
+  final _formKey = GlobalKey<FormState>();
+
+  void _submit() {
+    final isValid = _formKey.currentState?.validate();
+    if (!isValid!) {
+      return;
+    }
+    _formKey.currentState?.save();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextFormField(
+                keyboardType: TextInputType.name,
+                style: const TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.normal,
+                ),
+                decoration: MyStyle.registerForm,
+                onFieldSubmitted: (value) {},
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter name';
+                  }
+                  return null;
+                },
+              ),
+
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.normal,
+                ),
+                decoration: MyStyle.registerForm,
+                onFieldSubmitted: (value){},
+                validator: (value){
+                  return isEmailValid(value!) ? null : MyStrings.enterEmail;
+                },
+              ),
+                            
+              ElevatedButton(onPressed: () => _submit(), child: Text('Submit'))
+            ],
+          ),
+        ));
   }
 }
