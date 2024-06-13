@@ -42,28 +42,31 @@ class MyStyle {
       fontSize: 16.0,
       fontWeight: FontWeight.w900);
 
-  static InputDecoration registerForm = const InputDecoration(
-    hintText: MyStrings.enterName,
+  static InputDecoration registerForm({required String hintText}){
+  
+  return InputDecoration(
+    hintText: hintText,
     fillColor: MyColors.inputField,
     filled: true,
-    border: OutlineInputBorder(
+    border: const OutlineInputBorder(
       borderRadius: BorderRadius.all(
         Radius.circular(30.0),
       ),
       borderSide: BorderSide(color: MyColors.inputField),
     ),
-    enabledBorder: OutlineInputBorder(
+    enabledBorder: const OutlineInputBorder(
       borderRadius: BorderRadius.all(
         Radius.circular(30.0),
       ),
       borderSide: BorderSide(color: MyColors.inputField),
     ),
-    focusedBorder: OutlineInputBorder(
+    focusedBorder: const OutlineInputBorder(
       borderRadius: BorderRadius.all(
         Radius.circular(30.0),
       ),
       borderSide: BorderSide(color: MyColors.inputField),
     ),
-    contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+    contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
   );
+}
 }

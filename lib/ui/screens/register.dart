@@ -15,12 +15,6 @@ import '../../constants/firestore_constants.dart';
 class Register extends StatelessWidget {
   Register({super.key});
 
-  late String email;
-  late String password;
-  late String name;
-  final _auth = FirebaseAuth.instance;
-  final _fireStore = FirebaseFirestore.instance;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,135 +31,130 @@ class Register extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _body(BuildContext context) {
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
+
+  @override
+  State<RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
+  late String email;
+  late String password;
+  late String name;
+  final _auth = FirebaseAuth.instance;
+  final _fireStore = FirebaseFirestore.instance;
+  final _formKey = GlobalKey<FormState>();
+
+  void _submit() {
+    final isValid = _formKey.currentState?.validate();
+    if (!isValid!) {
+      return;
+    }
+    _formKey.currentState?.save();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: TextField(
-              keyboardType: TextInputType.text,
-              style: const TextStyle(
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.normal,
-              ),
-              decoration: const InputDecoration(
-                hintText: MyStrings.enterName,
-                border: InputBorder.none,
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                  borderSide: BorderSide(color: MyColors.primary),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextFormField(
+                keyboardType: TextInputType.name,
+                style: const TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.normal,
                 ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              ),
-              onChanged: (value) {
-                name = value;
-              },
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              style: const TextStyle(
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.normal,
-              ),
-              decoration: const InputDecoration(
-                hintText: MyStrings.enterEmail,
-                border: InputBorder.none,
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                  borderSide: BorderSide(color: MyColors.primary),
-                ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              ),
-              onChanged: (value) {
-                email = value;
-              },
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: TextField(
-              keyboardType: TextInputType.text,
-              style: const TextStyle(
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.normal,
-              ),
-              obscureText: true,
-              decoration: const InputDecoration(
-                hintText: MyStrings.enterPassword,
-                border: InputBorder.none,
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                  borderSide: BorderSide(color: MyColors.primary),
-                ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              ),
-              onChanged: (value) {
-                password = value;
-              },
-            ),
-          ),
-          SubmitButton(title: MyStrings.signUp, onPressed: registerUser),
-          Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: <Widget>[
-              const Text(
-                MyStrings.accountAlready,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Get.toNamed(MyRoutes.login);
+                decoration: MyStyle.registerForm(hintText: MyStrings.name),
+                onFieldSubmitted: (value) {},
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return MyStrings.enterName;
+                  }
+                  return null;
                 },
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-                  child: Text(
-                    MyStrings.logIn,
+              ),
+              const SizedBox(
+                height: 25.0,
+              ),
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.normal,
+                ),
+                decoration:
+                    MyStyle.registerForm(hintText: MyStrings.enterEmail),
+                onFieldSubmitted: (value) {},
+                validator: (value) {
+                  return isEmailValid(value!) ? null : MyStrings.enterEmail;
+                },
+              ),
+              const SizedBox(
+                height: 25.0,
+              ),
+              TextFormField(
+                  keyboardType: TextInputType.text,
+                  obscureText: true,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  decoration:
+                      MyStyle.registerForm(hintText: MyStrings.enterPassword),
+                  onFieldSubmitted: (value) {},
+                  validator: (value) {
+                    return isPasswordValid(value!)
+                        ? null
+                        : MyStrings.enterPassword;
+                  }),
+              SubmitButton(
+                  title: MyStrings.signUp,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      registerUser();
+                    }
+                  }),
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    MyStrings.accountAlready,
                     style: TextStyle(
                       fontSize: 14,
-                      color: MyColors.primary,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                ),
-              )
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed(MyRoutes.login);
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+                      child: Text(
+                        MyStrings.logIn,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: MyColors.primary,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   void registerUser() async {
@@ -207,69 +196,5 @@ class Register extends StatelessWidget {
       UiUtil.debugPrint(e);
       Get.snackbar(MyStrings.firebaseError, MyStrings.errorLogin);
     }
-  }
-}
-
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
-
-  @override
-  State<RegisterForm> createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
-  final _formKey = GlobalKey<FormState>();
-
-  void _submit() {
-    final isValid = _formKey.currentState?.validate();
-    if (!isValid!) {
-      return;
-    }
-    _formKey.currentState?.save();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                keyboardType: TextInputType.name,
-                style: const TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.normal,
-                ),
-                decoration: MyStyle.registerForm,
-                onFieldSubmitted: (value) {},
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter name';
-                  }
-                  return null;
-                },
-              ),
-
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.normal,
-                ),
-                decoration: MyStyle.registerForm,
-                onFieldSubmitted: (value){},
-                validator: (value){
-                  return isEmailValid(value!) ? null : MyStrings.enterEmail;
-                },
-              ),
-                            
-              ElevatedButton(onPressed: () => _submit(), child: Text('Submit'))
-            ],
-          ),
-        ));
   }
 }
