@@ -31,6 +31,7 @@ class MyStrings{
   static const String firebaseError = "Firebase Error";
   static const String errorLogin = "Incorrect email or password combination";
   static const String tweetNotFound = "Post not found";
+  static const String contentNotEmpty = "Please enter content to post";
 
   // Sample Data
   static const String twitterTermsUrl = 'https://x.com/en/tos/previous/version_9';

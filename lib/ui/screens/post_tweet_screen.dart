@@ -90,8 +90,6 @@ class PostTweetScreen extends StatelessWidget {
                       onPressed: () {
                         // Handle the post tweet logic here
                         UiUtil.closeKeyBoard();
-                        UiUtil.debugPrint(
-                            'Tweet posted: ${postTweetController.tweetText.value}');
                         postTweetController.postTweet();
                       },
                       child: Text(

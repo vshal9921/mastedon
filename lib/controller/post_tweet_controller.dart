@@ -14,6 +14,12 @@ class PostTweetController extends GetxController {
   Rx<XFile?> selectedFile = Rx<XFile?>(null);
 
   Future<void> postTweet() async {
+
+    if(tweetText.value.isEmpty){
+      Get.snackbar(MyStrings.error, MyStrings.contentNotEmpty);
+      return;
+    }
+
     isLoading.value = true;
 
     try {
