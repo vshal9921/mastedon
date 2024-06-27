@@ -33,72 +33,74 @@ class PostTweetScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Obx(
-              () => TextField(
-                maxLength: 280,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  hintText: MyStrings.whatsHappening,
-                  border: OutlineInputBorder(),
-                ),
-                controller: TextEditingController(
-                    text: postTweetController.tweetText.value)
-                  ..selection = TextSelection.fromPosition(TextPosition(
-                      offset: postTweetController.tweetText.value.length)),
-                onChanged: postTweetController.setText,
-              ),
-            ),
-
-            Obx(
-              () => postTweetController.selectedFile.value != null ?
-              SizedBox(
-                height: 300.0,
-                width: double.infinity,
-                child: Image.file(File(postTweetController.selectedFile.value!.path)))
-                : Container()
-          
-            ),
-            
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    postTweetController.performImagePick();
-                  },
-                  icon: const Icon(
-                    FontAwesomeIcons.image,
-                    size: 25.0,
-                    color: MyColors.primary,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Obx(
+                () => TextField(
+                  maxLength: 280,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    hintText: MyStrings.whatsHappening,
+                    border: OutlineInputBorder(),
                   ),
+                  controller: TextEditingController(
+                      text: postTweetController.tweetText.value)
+                    ..selection = TextSelection.fromPosition(TextPosition(
+                        offset: postTweetController.tweetText.value.length)),
+                  onChanged: postTweetController.setText,
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Obx(
-              () => postTweetController.isLoading.value
-                  ? CommomLoader()
-                  : ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(MyColors.primary),
-                      ),
-                      onPressed: () {
-                        // Handle the post tweet logic here
-                        UiUtil.closeKeyBoard();
-                        postTweetController.postTweet();
-                      },
-                      child: Text(
-                        MyStrings.postTweet,
-                        style: MyStyle.postButton,
-                      ),
+              ),
+        
+              Obx(
+                () => postTweetController.selectedFile.value != null ?
+                SizedBox(
+                  height: 300.0,
+                  width: double.infinity,
+                  child: Image.file(File(postTweetController.selectedFile.value!.path)))
+                  : Container()
+            
+              ),
+              
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      postTweetController.performImagePick();
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.image,
+                      size: 25.0,
+                      color: MyColors.primary,
                     ),
-            ),
-          ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Obx(
+                () => postTweetController.isLoading.value
+                    ? CommomLoader()
+                    : ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(MyColors.primary),
+                        ),
+                        onPressed: () {
+                          // Handle the post tweet logic here
+                          UiUtil.closeKeyBoard();
+                          postTweetController.postTweet();
+                        },
+                        child: Text(
+                          MyStrings.postTweet,
+                          style: MyStyle.postButton,
+                        ),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
