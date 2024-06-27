@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '/constants/firestore_constants.dart';
 import '/constants/string.dart';
 import '/utils/ui_util.dart';
@@ -12,10 +14,11 @@ class PostTweetController extends GetxController {
   var tweetText = ''.obs;
   final ImagePicker _picker = ImagePicker();
   Rx<XFile?> selectedFile = Rx<XFile?>(null);
+  String imageStoreUrl = '';
 
   Future<void> postTweet() async {
 
-    if(tweetText.value.isEmpty){
+    if(tweetText.value.isEmpty && imageStoreUrl.isEmpty){
       Get.snackbar(MyStrings.error, MyStrings.contentNotEmpty);
       return;
     }
@@ -33,8 +36,8 @@ class PostTweetController extends GetxController {
         MyFirestoreConstants.userHandle:
             SharedPref.getString(SharedPref.userHandle) ?? '',
         MyFirestoreConstants.userImage: MyStrings.defaultPic,
-        MyFirestoreConstants.mediaType: '',
-        MyFirestoreConstants.mediaUrl: '',
+        MyFirestoreConstants.mediaType: 'image',
+        MyFirestoreConstants.mediaUrl: imageStoreUrl,
         MyFirestoreConstants.likes: Random().nextInt(50),
         MyFirestoreConstants.numComments: Random().nextInt(35),
         MyFirestoreConstants.numRetweets: Random().nextInt(20),
@@ -63,6 +66,20 @@ class PostTweetController extends GetxController {
     if(image != null){
       selectedFile.value = image;
       UiUtil.debugPrint('image path = ${image.path}');
+
+      Reference referenceRoot = FirebaseStorage.instance.ref();
+      Reference refImagesDir = referenceRoot.child(MyFirestoreConstants.images);
+      Reference refImageToUpload = refImagesDir.child(DateTime.now().millisecondsSinceEpoch.toString());
+
+      try{
+        await refImageToUpload.putFile(File(image.path));
+        imageStoreUrl = await refImageToUpload.getDownloadURL();
+        UiUtil.debugPrint('image store url is $imageStoreUrl');
+      }
+      catch(e){
+        UiUtil.debugPrint(e.toString());
+        Get.snackbar(MyStrings.error, e.toString());
+      }
     }
   }
 }

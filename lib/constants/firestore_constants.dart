@@ -21,4 +21,8 @@ class MyFirestoreConstants{
   static const String numRetweets = 'numRetweets';
   static const String userHandle = 'userHandle';
   static const String userImage = 'userImage';
+
+  // Storage constants
+
+  static const String images = 'images';
 }
