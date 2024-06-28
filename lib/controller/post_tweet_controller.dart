@@ -11,6 +11,7 @@ import '../utils/shared_pref.dart';
 
 class PostTweetController extends GetxController {
   var isLoading = false.obs;
+  var isAssetLoading = false.obs;
   var tweetText = ''.obs;
   final ImagePicker _picker = ImagePicker();
   Rx<XFile?> selectedFile = Rx<XFile?>(null);
@@ -61,6 +62,9 @@ class PostTweetController extends GetxController {
   }
 
   void performImagePick() async {
+
+    isAssetLoading.value = true;
+     
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if(image != null){
@@ -75,11 +79,16 @@ class PostTweetController extends GetxController {
         await refImageToUpload.putFile(File(image.path));
         imageStoreUrl = await refImageToUpload.getDownloadURL();
         UiUtil.debugPrint('image store url is $imageStoreUrl');
+        isAssetLoading.value = false;
       }
       catch(e){
         UiUtil.debugPrint(e.toString());
         Get.snackbar(MyStrings.error, e.toString());
+        isAssetLoading.value = false;
       }
+    }
+    else {
+      isAssetLoading.value = false;
     }
   }
 }

@@ -11,7 +11,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class PostTweetScreen extends StatelessWidget {
-  final PostTweetController postTweetController = Get.put(PostTweetController());
+  final PostTweetController postTweetController =
+      Get.put(PostTweetController());
 
   PostTweetScreen({super.key});
 
@@ -53,32 +54,34 @@ class PostTweetScreen extends StatelessWidget {
                   onChanged: postTweetController.setText,
                 ),
               ),
-        
-              Obx(
-                () => postTweetController.selectedFile.value != null ?
-                SizedBox(
-                  height: 300.0,
-                  width: double.infinity,
-                  child: Image.file(File(postTweetController.selectedFile.value!.path)))
-                  : Container()
-            
-              ),
-              
-              const SizedBox(height: 10),
               Row(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      postTweetController.performImagePick();
-                    },
-                    icon: const Icon(
-                      FontAwesomeIcons.image,
-                      size: 25.0,
-                      color: MyColors.primary,
-                    ),
+                  Obx(
+                    () => postTweetController.isAssetLoading.value
+                        ? CommomLoader()
+                        : IconButton(
+                            onPressed: () {
+                              postTweetController.performImagePick();
+                            },
+                            icon: const Icon(
+                              FontAwesomeIcons.image,
+                              size: 25.0,
+                              color: MyColors.primary,
+                            ),
+                          ),
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Obx(() => postTweetController.selectedFile.value != null
+                  ? SizedBox(
+                      height: 300.0,
+                      width: double.infinity,
+                      child: Image.file(
+                          File(postTweetController.selectedFile.value!.path)))
+                  : Container()),
               const SizedBox(height: 20),
               Obx(
                 () => postTweetController.isLoading.value
@@ -106,5 +109,3 @@ class PostTweetScreen extends StatelessWidget {
     );
   }
 }
-
-
