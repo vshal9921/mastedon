@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mastedon/ui/widgets/loader.dart';
 import '/constants/routes.dart';
 import '/constants/string.dart';
 import '/constants/style.dart';
@@ -12,6 +13,7 @@ import '../../utils/shared_pref.dart';
 class Login extends StatelessWidget {
   Login({super.key});
 
+  var isLoading = false.obs;
   late String email;
   late String password;
   final _auth = FirebaseAuth.instance;
@@ -98,11 +100,15 @@ class Login extends StatelessWidget {
                 ),
               ),
 
-              SubmitButton(
-                title: MyStrings.signIn,
-                onPressed: () {
-                  doLogin();
-                },
+              Obx(
+                () => isLoading.value
+                    ? CommomLoader()
+                    : SubmitButton(
+                        title: MyStrings.signIn,
+                        onPressed: () {
+                          doLogin();
+                        },
+                      ),
               ),
               const SizedBox(height: 20),
               SubmitButton(
@@ -116,26 +122,29 @@ class Login extends StatelessWidget {
     );
   }
 
-  void doLogin() async{
-
+  void doLogin() async {
     UiUtil.closeKeyBoard();
+    isLoading.value = true;
 
-    try{
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      
-      if(userCredential.user!.email != null){
+    await Future.delayed(const Duration(seconds: 2));
 
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      if (userCredential.user!.email != null) {
         UiUtil.debugPrint(userCredential.user?.email);
-        await SharedPref.setString(SharedPref.email, userCredential.user?.email ?? "");
+        await SharedPref.setString(
+            SharedPref.email, userCredential.user?.email ?? "");
         Get.offAllNamed(MyRoutes.home);
-      }
-      else {
+      } else {
         Get.snackbar(MyStrings.error, MyStrings.errorLogin);
       }
-    }
-    catch(e){
+      isLoading.value = false;
+    } catch (e) {
       UiUtil.debugPrint(e);
       Get.snackbar(MyStrings.firebaseError, e.toString());
+      isLoading.value = false;
     }
   }
 }

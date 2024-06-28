@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:mastedon/ui/widgets/loader.dart';
 import 'package:mastedon/utils/validation_mixin.dart';
 import '/constants/color.dart';
 import '/constants/routes.dart';
@@ -25,7 +27,7 @@ class Register extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         // child: _body(context),
         child: RegisterForm(),
       ),
@@ -41,6 +43,8 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
+
+  var isLoading = false.obs;
   late String? email;
   late String? password;
   late String? name;
@@ -119,13 +123,18 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
                         ? null
                         : MyStrings.enterPassword;
                   }),
-              SubmitButton(
-                  title: MyStrings.signUp,
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      registerUser();
-                    }
-                  }),
+              Obx(
+                () => 
+                isLoading.value? 
+                CommomLoader() :
+                 SubmitButton(
+                    title: MyStrings.signUp,
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        registerUser();
+                      }
+                    }),
+              ),
               Wrap(
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
@@ -172,9 +181,13 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
     }
     _formKey.currentState?.save();
 
+    Future.delayed(const Duration(seconds: 2));
+
     UiUtil.closeKeyBoard();
+    isLoading.value = true;
 
     try {
+      isLoading.value = false;
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email!, password: password!);
 
       String? userEmail = userCredential.user?.email;
@@ -204,6 +217,7 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
     } catch (e) {
       UiUtil.debugPrint(e);
       Get.snackbar(MyStrings.firebaseError, MyStrings.errorLogin);
+      isLoading.value = false;
     }
   }
 }
