@@ -38,5 +38,6 @@ class LoginController extends GetxController{
       isLoading.value = false;
     }
   }
+  
 
 }
