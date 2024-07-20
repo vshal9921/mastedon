@@ -48,28 +48,23 @@ class ProfileBody extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(color: MyColors.white),
       margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
 
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20.0,),
-          Center(
-            child: CircleAvatar(
-              radius: 100.0,
-              backgroundImage: NetworkImage(
-                  SharedPref.getString(SharedPref.userImage) ??
-                      MyStrings.defaultPic),
-            ),
+          CircleAvatar(
+            radius: 40.0,
+            backgroundImage: NetworkImage(
+                SharedPref.getString(SharedPref.userImage) ??
+                    MyStrings.defaultPic),
           ),
           const SizedBox(
             height: 20.0,
           ),
-          const Divider(),
-      
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(MyStrings.name, style: MyStyle.tweetText,),
-          ),
+          Text(SharedPref.getString(SharedPref.name) ?? "", style: MyStyle.headingName,),
+          Text("@${SharedPref.getString(SharedPref.userHandle)}"),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(

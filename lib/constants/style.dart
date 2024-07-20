@@ -42,6 +42,13 @@ class MyStyle {
       fontSize: 16.0,
       fontWeight: FontWeight.w900);
 
+  static TextStyle headingName = const TextStyle(
+    fontFamily: 'Segoe',
+    fontWeight: FontWeight.w900,
+    color: MyColors.secondary,
+    fontSize: 20.0,
+  );
+
   static InputDecoration registerForm({required String hintText}){
   
   return InputDecoration(
