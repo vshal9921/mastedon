@@ -14,7 +14,7 @@ class Home extends StatelessWidget {
 
   final _auth = FirebaseAuth.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  //HomeController homeController = Get.put(HomeController());
+  HomeController homeController = Get.put(HomeController());
 
   void checkCurrentUser() async {
     _auth.currentUser;
